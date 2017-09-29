@@ -5,7 +5,7 @@ import unittest2 as unittest
 from plone.testing import z2
 
 from plone.app.testing import setRoles
-from plone.app.testing import applyProfile
+# from plone.app.testing import applyProfile
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
