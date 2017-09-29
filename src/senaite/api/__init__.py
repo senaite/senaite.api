@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import logging
+
 from Acquisition import aq_base
 from AccessControl.PermissionRole import rolesForPermissionOn
 
@@ -25,11 +27,11 @@ from plone.api.exc import InvalidParameterError
 from plone.dexterity.interfaces import IDexterityContent
 from plone.app.layout.viewlets.content import ContentHistoryView
 
-from senaite.lims import logger
+logger = logging.getLogger("senaite.api")
 
 """Senaite LIMS Framework API
 
-Please see senaite.lims/docs/API.rst for documentation.
+Please see senaite.api/docs/API.rst for documentation.
 
 Architecural Notes:
 
@@ -53,8 +55,8 @@ Thanks.
 _marker = object()
 
 
-class SenaiteLIMSError(Exception):
-    """Base exception class for senaite.lims errors."""
+class SenaiteAPIError(Exception):
+    """Base exception class for senaite.api errors."""
 
 
 def get_portal():
@@ -141,7 +143,7 @@ def fail(msg=None):
     """
     if msg is None:
         msg = "Reason not given."
-    raise SenaiteLIMSError("{}".format(msg))
+    raise SenaiteAPIError("{}".format(msg))
 
 
 def is_object(brain_or_object):
