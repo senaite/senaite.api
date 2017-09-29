@@ -1,10 +1,16 @@
 <div align="center">
-
   <h1>
     <a href="https://github.com/senaite/senaite.api">
-      <div>
-        <img src="static/logo.png" alt="senaite.api" />
-      </div>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td>
+            <img src="static/logo.png" alt="senaite.api" height="64" />
+          </td>
+          <td>
+            <h1>SENAITE API</h1>
+          </td>
+        </tr>
+      </table>
     </a>
   </h1>
 
