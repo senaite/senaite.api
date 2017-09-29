@@ -1,0 +1,6 @@
+[report]
+include =
+  src/*
+omit =
+  src/senaite/api/tests/*
+  src/bika/*

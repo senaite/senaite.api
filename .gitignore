@@ -5,3 +5,5 @@ eggs/
 src/bika.lims
 parts
 .installed.cfg
+.coverage
+htmlcov
