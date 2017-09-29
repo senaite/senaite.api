@@ -23,8 +23,8 @@ setup(
         "Framework :: Zope2",
     ],
     keywords='',
-    author='SENAITE',
-    author_email='senaite@ridingbytes.com',
+    author='SENAITE Foundation',
+    author_email='hello@senaite.com',
     url='https://github.com/senaite/senaite.lims',
     license='GPLv3',
     packages=find_packages('src', exclude=['ez_setup']),
@@ -34,6 +34,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'setuptools',
+        'plone.api',
         'bika.lims>=3.2.1rc3',
     ],
     extras_require={
