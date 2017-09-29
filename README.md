@@ -1,6 +1,6 @@
 <div align="center">
   <h1>
-    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <table>
       <tr>
         <td>
           <a href="https://github.com/senaite/senaite.api">
