@@ -25,7 +25,7 @@ setup(
     keywords='',
     author='SENAITE Foundation',
     author_email='hello@senaite.com',
-    url='https://github.com/senaite/senaite.lims',
+    url='https://github.com/senaite/senaite.api',
     license='GPLv3',
     packages=find_packages('src', exclude=['ez_setup']),
     package_dir={'': 'src'},
@@ -35,7 +35,7 @@ setup(
     install_requires=[
         'setuptools',
         'plone.api',
-        'bika.lims>=3.2.1rc3',
+        'bika.lims',
     ],
     extras_require={
         'test': [
