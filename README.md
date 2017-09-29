@@ -1,17 +1,17 @@
 <div align="center">
   <h1>
-    <a href="https://github.com/senaite/senaite.api">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr>
-          <td>
-            <img src="static/logo.png" alt="senaite.api" height="64" />
-          </td>
-          <td>
-            <h1>SENAITE API</h1>
-          </td>
-        </tr>
-      </table>
-    </a>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>
+          <a href="https://github.com/senaite/senaite.api">
+          <img src="static/logo.png" alt="senaite.api" height="64" />
+          </a>
+        </td>
+        <td>
+          <h1>SENAITE API</h1>
+        </td>
+      </tr>
+    </table>
   </h1>
 
   <p>The API provides a unified interface to the SENAITE core for developers.</p>
