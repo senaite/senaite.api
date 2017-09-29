@@ -3,4 +3,4 @@ include =
   src/*
 omit =
   src/senaite/api/tests/*
-  src/bika/*
+  src/bika.lims/*
