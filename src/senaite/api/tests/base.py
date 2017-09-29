@@ -24,18 +24,18 @@ class SimpleTestLayer(PloneSandboxLayer):
         super(SimpleTestLayer, self).setUpZope(app, configurationContext)
 
         # Load ZCML
-        import senaite.lims
+        # import senaite.api
 
-        self.loadZCML(package=senaite.lims)
+        # self.loadZCML(package=senaite.api)
 
         # Install product and call its initialize() function
-        z2.installProduct(app, 'senaite.lims')
+        z2.installProduct(app, 'senaite.api')
 
     def setUpPloneSite(self, portal):
         super(SimpleTestLayer, self).setUpPloneSite(portal)
 
         # Apply Setup Profile (portal_quickinstaller)
-        applyProfile(portal, 'senaite.lims:default')
+        # applyProfile(portal, 'senaite.api:default')
 
 
 class FunctionalTestLayer(SimpleTestLayer):
@@ -56,7 +56,7 @@ class FunctionalTestLayer(SimpleTestLayer):
 SIMPLE_FIXTURE = SimpleTestLayer()
 SIMPLE_TESTING = FunctionalTesting(
     bases=(SIMPLE_FIXTURE, ),
-    name="senaite.lims:SimpleTesting"
+    name="senaite.api:SimpleTesting"
 )
 
 ###
@@ -66,7 +66,7 @@ SIMPLE_TESTING = FunctionalTesting(
 FUNCTIONAL_FIXTURE = FunctionalTestLayer()
 FUNCTIONAL_TESTING = FunctionalTesting(
     bases=(FUNCTIONAL_FIXTURE, ),
-    name="senaite.lims:FunctionalTesting"
+    name="senaite.api:FunctionalTesting"
 )
 
 

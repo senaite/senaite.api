@@ -18,7 +18,7 @@ used to achieve a task.
 
 Import it first::
 
-    >>> from senaite.lims import api
+    >>> from senaite import api
 
 
 Getting the Portal
@@ -66,19 +66,19 @@ centralizes this functionality and makes it painless::
     >>> api.get_tool("bika_setup_catalog")
     <BikaSetupCatalog at /plone/bika_setup_catalog>
 
-Trying to fetch an non-existing tool raises a custom `SenaiteLIMSError`.
+Trying to fetch an non-existing tool raises a custom `SenaiteAPIError`.
 
     >>> api.get_tool("NotExistingTool")
     Traceback (most recent call last):
     [...]
-    SenaiteLIMSError: No tool named 'NotExistingTool' found.
+    SenaiteAPIError: No tool named 'NotExistingTool' found.
 
 This error can also be used for custom methods with the `fail` function::
 
     >>> api.fail("This failed badly")
     Traceback (most recent call last):
     [...]
-    SenaiteLIMSError: This failed badly
+    SenaiteAPIError: This failed badly
 
 
 Getting an Object
@@ -116,7 +116,7 @@ No supported objects raise an error::
     >>> api.get_object(object())
     Traceback (most recent call last):
     [...]
-    SenaiteLIMSError: <object object at 0x...> is not supported.
+    SenaiteAPIError: <object object at 0x...> is not supported.
 
 To check if an object is supported, e.g. is an ATCT, Dexterity, ZCatalog or
 Portal object, we can use the `is_object` function::
@@ -369,7 +369,7 @@ Paths outside the portal raise an error::
     >>> api.get_object_by_path('/root')
     Traceback (most recent call last):
     [...]
-    SenaiteLIMSError: Not a physical path inside the portal.
+    SenaiteAPIError: Not a physical path inside the portal.
 
 Any exception returns default value::
 
@@ -399,7 +399,7 @@ so in the most efficient way::
     >>> api.get_path(object())
     Traceback (most recent call last):
     [...]
-    SenaiteLIMSError: <object object at 0x...> is not supported.
+    SenaiteAPIError: <object object at 0x...> is not supported.
 
 
 Getting the Physical Parent Path of an Object
@@ -423,7 +423,7 @@ Like with the other functions, only portal objects are supported::
     >>> api.get_parent_path(object())
     Traceback (most recent call last):
     [...]
-    SenaiteLIMSError: <object object at 0x...> is not supported.
+    SenaiteAPIError: <object object at 0x...> is not supported.
 
 
 Getting the Parent Object
@@ -458,7 +458,7 @@ Like with the other functions, only portal objects are supported::
     >>> api.get_parent(object())
     Traceback (most recent call last):
     [...]
-    SenaiteLIMSError: <object object at 0x...> is not supported.
+    SenaiteAPIError: <object object at 0x...> is not supported.
 
 
 Searching Objects
@@ -497,7 +497,7 @@ manual merging and sorting of the results afterwards. Thus, we fail here:
     >>> results = api.search({'portal_type': ['Client', 'ClientFolder', 'Instrument'], 'sort_on': 'getId'})
     Traceback (most recent call last):
     [...]
-    SenaiteLIMSError: Multi Catalog Queries are not supported, please specify a catalog.
+    SenaiteAPIError: Multi Catalog Queries are not supported, please specify a catalog.
 
 Catalog queries w/o any `portal_type`, default to the `portal_catalog`, which
 will not find the following items::
@@ -590,7 +590,7 @@ raising an `Unauthorized` error::
     >>> api.safe_getattr(brain, "NONEXISTING")
     Traceback (most recent call last):
     [...]
-    SenaiteLIMSError: Attribute 'NONEXISTING' not found.
+    SenaiteAPIError: Attribute 'NONEXISTING' not found.
 
     >>> api.safe_getattr(brain, "NONEXISTING", "")
     ''
