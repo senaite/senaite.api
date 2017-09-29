@@ -1,6 +1,5 @@
 [report]
 include =
-  src/*
+  src/senaite/api/*
 omit =
   src/senaite/api/tests/*
-  src/bika.lims/*
