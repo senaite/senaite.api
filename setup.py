@@ -9,16 +9,22 @@ setup(
     name='senaite.api',
     version=version,
     description="SENAITE API",
-    long_description=open("README.md").read() + "\n" +
-                     open("docs/Changelog.rst").read() + "\n" +
+    long_description=open("docs/About.rst").read() +
+                     "\n\n" +
+                     open("src/senaite/api/docs/API.rst").read() +
+                     "\n\n" +
+                     "Changelog\n" +
+                     "=========\n" +
+                     open("docs/Changelog.rst").read() +
                      "\n\n" +
                      "Authors and maintainers\n" +
-                     "-----------------------\n" +
-                     "- RIDING BYTES, http://ridingbytes.com",
+                     "=======================\n\n" +
+                     "- Ramon Bartl (RIDING BYTES) <rb@ridingbytes.com>\n" +
     # Get more strings from
     # http://pypi.python.org/pypi?:action=list_classifiers
     classifiers=[
         "Programming Language :: Python",
+        "Framework :: Bika LIMS",
         "Framework :: Plone",
         "Framework :: Zope2",
     ],
@@ -35,7 +41,7 @@ setup(
     install_requires=[
         'setuptools',
         'plone.api',
-        'bika.lims',
+        'bika.lims>=3.2.1rc2',
     ],
     extras_require={
         'test': [
