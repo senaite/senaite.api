@@ -1,4 +1,5 @@
-global-include .py .zcml .txt .rst .md
-recursive-include src *
+include LICENSE
+include README.md
 recursive-include docs *
-global-exclude *.pyc
+recursive-include src/senaite *
+recursive-exclude src/senaite *.pyc

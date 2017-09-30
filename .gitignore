@@ -7,3 +7,4 @@ parts
 .installed.cfg
 .coverage
 htmlcov
+dist
