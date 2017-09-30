@@ -24,7 +24,6 @@ setup(
     # http://pypi.python.org/pypi?:action=list_classifiers
     classifiers=[
         "Programming Language :: Python",
-        "Framework :: Bika LIMS",
         "Framework :: Plone",
         "Framework :: Zope2",
     ],
