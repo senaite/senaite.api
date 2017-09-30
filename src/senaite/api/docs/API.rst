@@ -1,6 +1,5 @@
-================
-SENAITE LIMS API
-================
+SENAITE API DOCTEST
+===================
 
 The SENAITE LIMS API provides single functions for single purposes.
 This Test builds completely on the API without any further imports needed.
@@ -9,8 +8,8 @@ Running this test from the buildout directory::
 
     bin/test test_doctests -t API
 
-API
-===
+Introduction
+------------
 
 The purpose of this API is to help coders to follow the DRY principle (Don't
 Repeat Yourself). It also ensures that the most effective and efficient method is
@@ -86,7 +85,7 @@ Getting an Object
 
 Getting a tool from a catalog brain is a common task in Bika LIMS. This function
 provides an unified interface to portal objects **and** brains.
-Furthermore it is idempotent, so it can be called multiple times in a row::
+Furthermore it is idempotent, so it can be called multiple times in a row.
 
 We will demonstrate the usage on the client object we created above::
 

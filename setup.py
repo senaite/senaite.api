@@ -19,7 +19,7 @@ setup(
                      "\n\n" +
                      "Authors and maintainers\n" +
                      "=======================\n\n" +
-                     "- Ramon Bartl (RIDING BYTES) <rb@ridingbytes.com>\n" +
+                     "- Ramon Bartl (RIDING BYTES) <rb@ridingbytes.com>\n",
     # Get more strings from
     # http://pypi.python.org/pypi?:action=list_classifiers
     classifiers=[
