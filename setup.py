@@ -40,7 +40,7 @@ setup(
     install_requires=[
         'setuptools',
         'plone.api',
-        'bika.lims>=3.2.1rc2',
+        'bika.lims',
     ],
     extras_require={
         'test': [
