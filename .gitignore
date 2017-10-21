@@ -8,3 +8,5 @@ parts
 .coverage
 htmlcov
 dist
+*.pyc
+*egg-info
