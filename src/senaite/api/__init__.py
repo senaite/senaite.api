@@ -135,7 +135,7 @@ def get_tool(name, context=None, default=_marker):
         try:
             context = get_object(context)
             return getToolByName(context, name)
-        except (BikaLIMSError, AttributeError) as e:
+        except (SenaiteAPIError, AttributeError) as e:
             # https://github.com/senaite/bika.lims/issues/396
             logger.warn("get_tool::getToolByName({}, '{}') failed: {} "
                         "-> falling back to plone.api.portal.get_tool('{}')"
