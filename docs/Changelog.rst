@@ -1,4 +1,4 @@
-1.0.1 (2017-11-24)
+1.0.2 (2017-11-24)
 ------------------
 
 - #397(bika.lims) Fix Issue-396: AttributeError: uid_catalog on AR publication
