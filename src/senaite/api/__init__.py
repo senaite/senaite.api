@@ -350,8 +350,11 @@ def get_url(brain_or_object):
     :returns: Absolute URL
     :rtype: string
     """
-    if is_brain(brain_or_object) and base_hasattr(brain_or_object, "getURL"):
-        return brain_or_object.getURL()
+    if is_brain(brain_or_object) and base_hasattr(brain_or_object, "getPath"):
+        portal = get_portal()
+        portal_path = portal.absolute_url()
+        ret = '{}/{}'.format(portal_path, brain_or_object.getPath())
+        return ret
     return get_object(brain_or_object).absolute_url()
 
 
