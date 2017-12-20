@@ -902,3 +902,15 @@ def get_current_user():
     :returns: Current User
     """
     return ploneapi.user.get_current()
+
+
+def get_registry_record(name, default=None):
+    """Returns the value of a registry record
+
+    :param name: [required] name of the registry record
+    :type name: str
+    :param default: The value returned if the record is not found
+    :type default: anything
+    :returns: value of the registry record
+    """
+    return ploneapi.portal.get_registry_record(name, default=default)
