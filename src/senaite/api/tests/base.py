@@ -11,14 +11,13 @@ from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import FunctionalTesting
 
-from bika.lims.testing import BIKA_SIMPLE_FIXTURE
-from bika.lims.testing import BIKA_FUNCTIONAL_FIXTURE
+from bika.lims.testing import BIKA_LIMS_FUNCTIONAL_TESTING
 
 
 class SimpleTestLayer(PloneSandboxLayer):
     """Setup Plone with installed AddOn only
     """
-    defaultBases = (BIKA_SIMPLE_FIXTURE, PLONE_FIXTURE,)
+    defaultBases = (BIKA_LIMS_FUNCTIONAL_TESTING, PLONE_FIXTURE,)
 
     def setUpZope(self, app, configurationContext):
         super(SimpleTestLayer, self).setUpZope(app, configurationContext)
@@ -38,18 +37,6 @@ class SimpleTestLayer(PloneSandboxLayer):
         # applyProfile(portal, 'senaite.api:default')
 
 
-class FunctionalTestLayer(SimpleTestLayer):
-    """Setup Plone for functional Tests
-    """
-    defaultBases = (BIKA_FUNCTIONAL_FIXTURE, )
-
-    def setUpZope(self, app, configurationContext):
-        super(FunctionalTestLayer, self).setUpZope(app, configurationContext)
-
-    def setUpPloneSite(self, portal):
-        super(FunctionalTestLayer, self).setUpPloneSite(portal)
-
-
 ###
 # Use for simple tests (w/o contents)
 ###
@@ -57,16 +44,6 @@ SIMPLE_FIXTURE = SimpleTestLayer()
 SIMPLE_TESTING = FunctionalTesting(
     bases=(SIMPLE_FIXTURE, ),
     name="senaite.api:SimpleTesting"
-)
-
-###
-# Use for functional tests (w/ contents)
-# Using this Layer takes approx. 1 minute to load
-###
-FUNCTIONAL_FIXTURE = FunctionalTestLayer()
-FUNCTIONAL_TESTING = FunctionalTesting(
-    bases=(FUNCTIONAL_FIXTURE, ),
-    name="senaite.api:FunctionalTesting"
 )
 
 
@@ -84,7 +61,7 @@ class SimpleTestCase(unittest.TestCase):
 
 
 class FunctionalTestCase(unittest.TestCase):
-    layer = FUNCTIONAL_TESTING
+    layer = SIMPLE_TESTING
 
     def setUp(self):
         super(FunctionalTestCase, self).setUp()
