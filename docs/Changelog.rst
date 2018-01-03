@@ -1,7 +1,7 @@
-1.0.3 (unreleased)
+1.1.0 (unreleased)
 ------------------
 
-- no changes yet
+- Integration to SENAITE CORE
 
 
 1.0.2 (2017-11-24)
