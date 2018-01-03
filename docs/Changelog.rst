@@ -1,7 +1,20 @@
-1.1.0 (unreleased)
+1.1.0 (2018-01-03)
 ------------------
 
+**Added**
+
+**Removed**
+
+**Changed**
+
+- License changed to GPLv2
 - Integration to SENAITE CORE
+
+**Fixed**
+
+- Fixed Tests
+
+**Security**
 
 
 1.0.2 (2017-11-24)
