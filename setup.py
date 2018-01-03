@@ -27,7 +27,7 @@ setup(
     author='SENAITE Foundation',
     author_email='hello@senaite.com',
     url='https://github.com/senaite/senaite.api',
-    license='GPLv3',
+    license='GPLv2',
     packages=find_packages('src', exclude=['ez_setup']),
     package_dir={'': 'src'},
     namespace_packages=['senaite'],
