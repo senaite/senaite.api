@@ -5,7 +5,7 @@
   </a>
   <h1>SENAITE API</h1>
 
-  <p>The API provides a unified interface to the SENAITE core for developers.</p>
+  <p>The API provides a unified interface to the SENAITE CORE for developers.</p>
 
 
   <div>
