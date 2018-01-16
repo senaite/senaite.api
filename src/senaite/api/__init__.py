@@ -473,7 +473,7 @@ def get_object_by_path(path, default=_marker):
     return get_object(res[0])
 
 
-def get_path(brain_or_object, include_portal_path=False):
+def get_path(brain_or_object):
     """Calculate the physical path of this object
 
     :param brain_or_object: A single catalog brain or content object
