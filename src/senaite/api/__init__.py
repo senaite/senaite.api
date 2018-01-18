@@ -251,6 +251,18 @@ def is_folderish(brain_or_object):
     return IFolderish.providedBy(get_object(brain_or_object))
 
 
+def is_relationship_object(brain_or_object):
+    """Checks if the passed in brain or object is a relationship object
+
+    :param brain_or_object: A single catalog brain or content object
+    :return: True if the object is a relationship object
+    """
+    parent = get_parent(brain_or_object)
+    if hasattr(parent, 'id') and parent.id == "at_references":
+        return True
+    return False
+
+
 def get_portal_type(brain_or_object):
     """Get the portal type for this object
 
