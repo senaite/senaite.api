@@ -494,7 +494,11 @@ def get_path(brain_or_object):
     :rtype: string
     """
     if is_brain(brain_or_object):
-        return brain_or_object.getPath()
+        path = brain_or_object.getPath()
+        portal_path = get_path(get_portal())
+        if portal_path not in path:
+            return "{}/{}".format(portal_path, path)
+        return path
     return "/".join(get_object(brain_or_object).getPhysicalPath())
 
 
