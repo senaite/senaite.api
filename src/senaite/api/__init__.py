@@ -487,7 +487,7 @@ def get_path(brain_or_object):
         if portal_path not in path:
             return "{}/{}".format(portal_path, path)
         return path
-    return "/".join(get_object(brain_or_object).getPhysicalPath())
+    return "/{}".format(get_object(brain_or_object).getPhysicalPath())
 
 
 def get_parent_path(brain_or_object):
