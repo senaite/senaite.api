@@ -923,3 +923,37 @@ But fails if we specify only `Contact` type:
     >>> nuser = api.get_user_contact(user, ['Contact'])
     >>> nuser is None
     True
+
+
+ID Normalizer
+-------------
+
+Normalizes a string to be usable as a system ID:
+
+    >>> api.normalize_id("My new ID")
+    'my-new-id'
+
+    >>> api.normalize_id("Really/Weird:Name;")
+    'really-weird-name'
+
+    >>> api.normalize_id(None)
+    Traceback (most recent call last):
+    [...]
+    SenaiteAPIError: Type of argument must be string, found '<type 'NoneType'>'
+
+
+File Normalizer
+---------------
+
+Normalizes a string to be usable as a file name:
+
+    >>> api.normalize_filename("My new ID")
+    'My new ID'
+
+    >>> api.normalize_filename("Really/Weird:Name;")
+    'Really-Weird-Name'
+
+    >>> api.normalize_filename(None)
+    Traceback (most recent call last):
+    [...]
+    SenaiteAPIError: Type of argument must be string, found '<type 'NoneType'>'

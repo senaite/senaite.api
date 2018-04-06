@@ -1,22 +1,24 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from Acquisition import aq_base
-from plone import api as ploneapi
-from zope import globalrequest
 
 from AccessControl.PermissionRole import rolesForPermissionOn
-from Products.Archetypes.BaseObject import BaseObject
-from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.CMFCore.interfaces import IFolderish
-from Products.CMFCore.interfaces import ISiteRoot
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.utils import _createObjectByType
-from Products.CMFPlone.utils import base_hasattr
-from Products.ZCatalog.interfaces import ICatalogBrain
+from Acquisition import aq_base
+from plone import api as ploneapi
 from plone.api.exc import InvalidParameterError
 from plone.app.layout.viewlets.content import ContentHistoryView
 from plone.dexterity.interfaces import IDexterityContent
+from plone.i18n.normalizer.interfaces import IFileNameNormalizer
+from plone.i18n.normalizer.interfaces import IIDNormalizer
+from Products.Archetypes.BaseObject import BaseObject
+from Products.CMFCore.interfaces import IFolderish
+from Products.CMFCore.interfaces import ISiteRoot
+from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.WorkflowCore import WorkflowException
+from Products.CMFPlone.utils import _createObjectByType
+from Products.CMFPlone.utils import base_hasattr
+from Products.ZCatalog.interfaces import ICatalogBrain
+from zope import globalrequest
 from zope.component import getMultiAdapter
 from zope.component import getUtility
 from zope.component.interfaces import IFactory
@@ -950,3 +952,33 @@ def get_registry_record(name, default=None):
     :returns: value of the registry record
     """
     return ploneapi.portal.get_registry_record(name, default=default)
+
+
+def normalize_id(string):
+    """Normalize the id
+
+    :param string: A string to normalize
+    :type string: str
+    :returns: Normalized ID
+    :rtype: str
+    """
+    if not isinstance(string, basestring):
+        fail("Type of argument must be string, found '{}'".format(type(string)))
+    # get the id nomalizer utility
+    normalizer = getUtility(IIDNormalizer).normalize
+    return normalizer(string)
+
+
+def normalize_filename(string):
+    """Normalize the filename
+
+    :param string: A string to normalize
+    :type string: str
+    :returns: Normalized ID
+    :rtype: str
+    """
+    if not isinstance(string, basestring):
+        fail("Type of argument must be string, found '{}'".format(type(string)))
+    # get the file nomalizer utility
+    normalizer = getUtility(IFileNameNormalizer).normalize
+    return normalizer(string)
