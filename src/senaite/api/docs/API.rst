@@ -30,12 +30,12 @@ The Portal is the SENAITE LIMS root object::
     <PloneSite at /plone>
 
 
-Getting the Bika Setup object
------------------------------
+Getting the Setup object
+------------------------
 
-The Bika Setup object gives access to all of the Bika configuration settings::
+The Setup object gives access to all of the Bika configuration settings::
 
-    >>> bika_setup = api.get_bika_setup()
+    >>> bika_setup = api.get_setup()
     >>> bika_setup
     <BikaSetup at /plone/bika_setup>
 

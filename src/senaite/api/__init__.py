@@ -74,11 +74,18 @@ def get_portal():
     return ploneapi.portal.getSite()
 
 
-def get_bika_setup():
+def get_setup():
     """Fetch the `bika_setup` folder.
     """
     portal = get_portal()
     return portal.get("bika_setup")
+
+
+def get_bika_setup():
+    """Fetch the `bika_setup` folder.
+    """
+    # BBB: use get_setup()
+    return get_setup()
 
 
 def create(container, portal_type, *args, **kwargs):
