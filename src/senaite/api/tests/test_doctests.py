@@ -16,6 +16,7 @@ def test_suite():
     suite.addTests([
         ztc.ZopeDocFileSuite(
             '../docs/API.rst',
+            '../docs/API_analysis.rst',
             test_class=SimpleTestCase,
             optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE,
         ),
