@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import logging
+from datetime import datetime
 
 from AccessControl.PermissionRole import rolesForPermissionOn
 from Acquisition import aq_base
+from DateTime import DateTime
 from plone import api as ploneapi
 from plone.api.exc import InvalidParameterError
 from plone.app.layout.viewlets.content import ContentHistoryView
@@ -1007,3 +1009,67 @@ def is_uid(uid, validate=False):
     if brains:
         assert (len(brains) == 1)
     return len(brains) > 0
+
+
+def is_date(date):
+    """Checks if the passed in value is a valid Zope's DateTime
+
+    :param date: The date to check
+    :type date: DateTime
+    :return: True if a valid date
+    :rtype: bool
+    """
+    if not date:
+        return False
+    return isinstance(date, (DateTime, datetime))
+
+
+def to_date(value, default=None):
+    """Tries to convert the passed in value to Zope's DateTime
+
+    :param value: The value to be converted to a valid DateTime
+    :type value: str, DateTime or datetime
+    :return: The DateTime representation of the value passed in or default
+    """
+    if isinstance(value, DateTime):
+        return value
+    if not value:
+        if default is None:
+            return None
+        return to_date(default)
+    try:
+        if isinstance(value, str) and '.' in value:
+            # https://docs.plone.org/develop/plone/misc/datetime.html#datetime-problems-and-pitfalls
+            return DateTime(value, datefmt='international')
+        return DateTime(value)
+    except:
+        return to_date(default)
+
+
+def is_floatable(value):
+    """Checks if the passed in value is a valid floatable number
+
+    :param value: The value to be evaluated as a float number
+    :type value: str, float, int
+    :returns: True if is a valid float number
+    :rtype: bool"""
+    try:
+        float(value)
+        return True
+    except (TypeError, ValueError):
+        return False
+
+
+def to_float(value, default=_marker):
+    """Converts the passed in value to a float number
+
+    :param value: The value to be converted to a floatable number
+    :type value: str, float, int
+    :returns: The float number representation of the passed in value
+    :rtype: float
+    """
+    if not is_floatable(value):
+        if default is not _marker:
+            return to_float(default)
+        fail("Value %s is not floatable" % repr(value))
+    return float(value)
