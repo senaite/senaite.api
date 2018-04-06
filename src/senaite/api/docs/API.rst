@@ -989,6 +989,87 @@ But fails if we specify only `Contact` type:
     True
 
 
+Creating a Cache Key
+--------------------
+
+This function creates a good cache key for a generic object or brain::
+
+    >>> key1 = api.get_cache_key(client)
+    >>> key1
+    'Client-client-1-...'
+
+This can be also done for a catalog result brain::
+
+    >>> portal_catalog = api.get_tool("portal_catalog")
+    >>> brains = portal_catalog({"portal_type": "Client", "UID": api.get_uid(client)})
+    >>> key2 = api.get_cache_key(brains[0])
+    >>> key2
+    'Client-client-1-...'
+
+The two keys should be equal::
+
+    >>> key1 == key2
+    True
+
+The key should change when the object get modified::
+
+    >>> from zope.lifecycleevent import modified
+    >>> client.setClientID("TESTCLIENT")
+    >>> modified(client)
+    >>> portal.aq_parent._p_jar.sync()
+    >>> key3 = api.get_cache_key(client)
+    >>> key3 != key1
+    True
+
+.. important:: Workflow changes do not change the modification date!
+A custom event subscriber will update it therefore.
+
+A workflow transition should also change the cache key::
+
+    >>> _ = api.do_transition_for(client, transition="deactivate")
+    >>> api.get_inactive_status(client)
+    'inactive'
+    >>> key4 = api.get_cache_key(client)
+    >>> key4 != key3
+    True
+
+
+Cache Key decorator
+-------------------
+
+This decorator can be used for `plone.memoize` cache decorators in classes.
+The decorator expects that the first argument is the class instance (`self`) and
+the second argument a brain or object::
+
+    >>> from plone.memoize.volatile import cache
+
+    >>> class BikaClass(object):
+    ...     @cache(api.bika_cache_key_decorator)
+    ...     def get_very_expensive_calculation(self, obj):
+    ...         print "very expensive calculation"
+    ...         return "calculation result"
+
+Calling the (expensive) method of the class does the calculation just once::
+
+    >>> instance = BikaClass()
+    >>> instance.get_very_expensive_calculation(client)
+    very expensive calculation
+    'calculation result'
+    >>> instance.get_very_expensive_calculation(client)
+    'calculation result'
+
+The decorator can also handle brains::
+
+    >>> instance = BikaClass()
+    >>> portal_catalog = api.get_tool("portal_catalog")
+    >>> brain = portal_catalog(portal_type="Client")[0]
+    >>> instance.get_very_expensive_calculation(brain)
+    very expensive calculation
+    'calculation result'
+    >>> instance.get_very_expensive_calculation(brain)
+    'calculation result'
+
+
 ID Normalizer
 -------------
 
