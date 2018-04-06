@@ -675,6 +675,70 @@ Reactivate the client::
     'active'
 
 
+Getting the available transitions for an object
+-----------------------------------------------
+
+This function returns all possible transitions from all workflows in the
+object's workflow chain.
+
+Let's create a Batch. It should allow us to invoke transitions from two
+workflows; 'close' from the bika_batch_workflow, and 'cancel' from the
+bika_cancellation_workflow::
+
+    >>> batch1 = api.create(portal.batches, "Batch", title="Test Batch")
+    >>> transitions = api.get_transitions_for(batch1)
+    >>> len(transitions)
+    2
+
+The transitions are returned as a list of dictionaries. Since we cannot rely on
+the order of dictionary keys, we will have to satisfy ourselves here with
+checking that the two expected transitions are present in the return value::
+
+    >>> 'Close' in [t['title'] for t in transitions]
+    True
+    >>> 'Cancel' in [t['title'] for t in transitions]
+    True
+
+
+Getting the creation date of an object
+--------------------------------------
+
+This function returns the creation date of a given object::
+
+    >>> created = api.get_creation_date(client)
+    >>> created
+    DateTime('...')
+
+
+Getting the modification date of an object
+------------------------------------------
+
+This function returns the modification date of a given object::
+
+    >>> modified = api.get_modification_date(client)
+    >>> modified
+    DateTime('...')
+
+
+Getting the review state of an object
+-------------------------------------
+
+This function returns the review state of a given object::
+
+    >>> review_state = api.get_review_status(client)
+    >>> review_state
+    'active'
+
+It should also work for catalog brains::
+
+    >>> portal_catalog = api.get_tool("portal_catalog")
+    >>> results = portal_catalog({"portal_type": "Client", "UID": api.get_uid(client)})
+    >>> len(results)
+    1
+    >>> api.get_review_status(results[0]) == review_state
+    True
+
+
 Getting the registered Catalogs of an Object
 --------------------------------------------
 
