@@ -3,7 +3,7 @@
    :height: 64 px
    :align: center
 
-- **SENAITE.API**: The Swiss-Army-Knife for SENAITE Core and Add-on developers**
+- **SENAITE.API**: *The Swiss-Army-Knife for SENAITE Core and Add-on developers*
 
 .. image:: https://img.shields.io/pypi/v/senaite.api.svg?style=flat-square
    :target: https://pypi.python.org/pypi/senaite.api
