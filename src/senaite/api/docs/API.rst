@@ -1022,7 +1022,7 @@ The key should change when the object get modified::
     True
 
 .. important:: Workflow changes do not change the modification date!
-A custom event subscriber will update it therefore.
+               A custom event subscriber will update it therefore.
 
 A workflow transition should also change the cache key::
 
