@@ -7,7 +7,6 @@
 
   <p>The API provides a unified interface to the SENAITE CORE for developers.</p>
 
-
   <div>
     <a href="https://travis-ci.org/senaite/senaite.api">
       <img src="https://img.shields.io/travis/senaite/senaite.api.svg?style=flat-square" alt="travis-ci" />
