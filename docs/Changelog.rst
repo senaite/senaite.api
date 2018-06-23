@@ -1,7 +1,8 @@
 1.2.1 (2018-06-23)
 ------------------
 
-- Fixed Documentaion Page for PyPI
+- Better Documentation Page for PyPI
+- Fixed formatting of Doctests
 
 
 1.2.0 (2018-06-23)

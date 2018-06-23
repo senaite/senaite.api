@@ -32,7 +32,7 @@ SENAITE API is the Swiss-Army-Knife for SENAITE Core Add-on developers. It
 provides a sane interface for common tasks in SENAITE, like e.g. object
 creation, lookup by ID/UID, search etc.
 
-Please see the doctests for further details and usage.
+Please see the doctests for further details and usage:
 
 - [Core API](src/senaite/api/docs/API.rst)
 - [Analysis API](src/senaite/api/docs/API_analysis.rst)
