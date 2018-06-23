@@ -1,3 +1,23 @@
+1.2.0 (2018-06-23)
+------------------
+
+**Added**
+
+- Added `is_uid` function
+
+**Removed**
+
+**Changed**
+
+- Added SENAITE CORE API functions
+
+**Fixed**
+
+- Fixed Tests
+
+**Security**
+
+
 1.1.0 (2018-01-03)
 ------------------
 
