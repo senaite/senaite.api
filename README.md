@@ -3,7 +3,6 @@
   <a href="https://github.com/senaite/senaite.api">
     <img src="static/api-logo.png" alt="senaite.api" height="64" />
   </a>
-  <h1>SENAITE API</h1>
 
   <p>The API provides a unified interface SENAITE Core and Add-on developers</p>
 
