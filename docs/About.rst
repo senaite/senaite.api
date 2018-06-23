@@ -29,9 +29,6 @@ Please see the doctests for further details and usage:
 -  `Core API Documentation`_
 -  `Analysis API Documentation`_
 
-.. _Core API Documentation: https://github.com/senaite/senaite.api/blob/master/src/senaite/api/docs/API.rst
-.. _Analysis API Documentation: https://github.com/senaite/senaite.api/blob/master/src/senaite/api/docs/API_analysis.rst
-
 
 Installation
 ============
@@ -89,3 +86,9 @@ For the changes to take effect you need to re-run buildout from your
 console::
 
    bin/buildout
+
+
+.. _Plone 4: https://docs.plone.org/4/en/manage/installing/index.html
+.. _senaite.lims: https://github.com/senaite/senaite.lims#installation
+.. _Core API Documentation: https://github.com/senaite/senaite.api/blob/master/src/senaite/api/docs/API.rst
+.. _Analysis API Documentation: https://github.com/senaite/senaite.api/blob/master/src/senaite/api/docs/API_analysis.rst
