@@ -1,22 +1,33 @@
 # -*- coding: utf-8 -*-
+#
+# This file is part of SENAITE.API
+#
+# Copyright 2018 by it's authors.
+# Some rights reserved. See LICENSE.rst, CONTRIBUTORS.rst.
 
 import logging
-from Acquisition import aq_base
-from plone import api as ploneapi
-from zope import globalrequest
+import re
+from datetime import datetime
 
 from AccessControl.PermissionRole import rolesForPermissionOn
-from Products.Archetypes.BaseObject import BaseObject
-from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.CMFCore.interfaces import IFolderish
-from Products.CMFCore.interfaces import ISiteRoot
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.utils import _createObjectByType
-from Products.CMFPlone.utils import base_hasattr
-from Products.ZCatalog.interfaces import ICatalogBrain
+from Acquisition import aq_base
+from DateTime import DateTime
+from plone import api as ploneapi
 from plone.api.exc import InvalidParameterError
 from plone.app.layout.viewlets.content import ContentHistoryView
 from plone.dexterity.interfaces import IDexterityContent
+from plone.i18n.normalizer.interfaces import IFileNameNormalizer
+from plone.i18n.normalizer.interfaces import IIDNormalizer
+from plone.memoize.volatile import DontCache
+from Products.Archetypes.BaseObject import BaseObject
+from Products.CMFCore.interfaces import IFolderish
+from Products.CMFCore.interfaces import ISiteRoot
+from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.WorkflowCore import WorkflowException
+from Products.CMFPlone.utils import _createObjectByType
+from Products.CMFPlone.utils import base_hasattr
+from Products.ZCatalog.interfaces import ICatalogBrain
+from zope import globalrequest
 from zope.component import getMultiAdapter
 from zope.component import getUtility
 from zope.component.interfaces import IFactory
@@ -52,6 +63,8 @@ Thanks.
 
 _marker = object()
 
+UID_RX = re.compile("[a-z0-9]{32}$")
+
 
 class SenaiteAPIError(Exception):
     """Base exception class for senaite.api errors."""
@@ -65,11 +78,18 @@ def get_portal():
     return ploneapi.portal.getSite()
 
 
-def get_bika_setup():
+def get_setup():
     """Fetch the `bika_setup` folder.
     """
     portal = get_portal()
     return portal.get("bika_setup")
+
+
+def get_bika_setup():
+    """Fetch the `bika_setup` folder.
+    """
+    # BBB: use get_setup()
+    return get_setup()
 
 
 def create(container, portal_type, *args, **kwargs):
@@ -112,10 +132,13 @@ def create(container, portal_type, *args, **kwargs):
         # already by an event handler
         obj = container._getOb(obj.getId())
 
-    obj.edit(**kwargs)
     # handle AT Content
     if is_at_content(obj):
         obj.processForm()
+
+    # Edit after processForm; processForm does AT unmarkCreationFlag.
+    obj.edit(**kwargs)
+
     # explicit notification
     modified(obj)
     return obj
@@ -482,7 +505,11 @@ def get_path(brain_or_object):
     :rtype: string
     """
     if is_brain(brain_or_object):
-        return brain_or_object.getPath()
+        path = brain_or_object.getPath()
+        portal_path = get_path(get_portal())
+        if portal_path not in path:
+            return "{}/{}".format(portal_path, path)
+        return path
     return "/".join(get_object(brain_or_object).getPhysicalPath())
 
 
@@ -699,6 +726,100 @@ def get_workflow_status_of(brain_or_object, state_var="review_state"):
     return workflow.getInfoFor(ob=obj, name=state_var)
 
 
+def get_creation_date(brain_or_object):
+    """Get the creation date of the brain or object
+
+    :param brain_or_object: A single catalog brain or content object
+    :type brain_or_object: ATContentType/DexterityContentType/CatalogBrain
+    :returns: Creation date
+    :rtype: DateTime
+    """
+    created = getattr(brain_or_object, "created", None)
+    if created is None:
+        fail("Object {} has no creation date ".format(
+             repr(brain_or_object)))
+    if callable(created):
+        return created()
+    return created
+
+
+def get_review_status(brain_or_object):
+    """Get the `review_state` of an object
+
+    :param brain_or_object: A single catalog brain or content object
+    :type brain_or_object: ATContentType/DexterityContentType/CatalogBrain
+    :returns: Value of the review_status variable
+    :rtype: String
+    """
+    if is_brain(brain_or_object):
+        return brain_or_object.review_state
+    return get_workflow_status_of(brain_or_object, state_var="review_state")
+
+
+def get_cancellation_status(brain_or_object, default="active"):
+    """Get the `cancellation_state` of an object
+
+    :param brain_or_object: A single catalog brain or content object
+    :type brain_or_object: ATContentType/DexterityContentType/CatalogBrain
+    :returns: Value of the review_status variable
+    :rtype: String
+    """
+    if is_brain(brain_or_object):
+        return getattr(brain_or_object, "cancellation_state", default)
+    workflows = get_workflows_for(brain_or_object)
+    if 'bika_cancellation_workflow' not in workflows:
+        return default
+    return get_workflow_status_of(brain_or_object, 'cancellation_state')
+
+
+def get_modification_date(brain_or_object):
+    """Get the modification date of the brain or object
+
+    :param brain_or_object: A single catalog brain or content object
+    :type brain_or_object: ATContentType/DexterityContentType/CatalogBrain
+    :returns: Modification date
+    :rtype: DateTime
+    """
+    modified = getattr(brain_or_object, "modified", None)
+    if modified is None:
+        fail("Object {} has no modification date ".format(
+             repr(brain_or_object)))
+    if callable(modified):
+        return modified()
+    return modified
+
+
+def get_inactive_status(brain_or_object, default="active"):
+    """Get the `cancellation_state` of an objct
+
+    :param brain_or_object: A single catalog brain or content object
+    :type brain_or_object: ATContentType/DexterityContentType/CatalogBrain
+    :returns: Value of the review_status variable
+    :rtype: String
+    """
+    if is_brain(brain_or_object):
+        return getattr(brain_or_object, "inactive_state", default)
+    workflows = get_workflows_for(brain_or_object)
+    if 'bika_inactive_workflow' not in workflows:
+        return default
+    return get_workflow_status_of(brain_or_object, 'inactive_state')
+
+
+def is_active(brain_or_object):
+    """Check if the workflow state of the object is 'inactive' or 'cancelled'.
+
+    :param brain_or_object: A single catalog brain or content object
+    :type brain_or_object: ATContentType/DexterityContentType/CatalogBrain
+    :returns: False if the object is in the state 'inactive' or 'cancelled'
+    :rtype: bool
+    """
+    if get_inactive_status(brain_or_object) == "inactive":
+        return False
+    if get_cancellation_status(brain_or_object) == "cancelled":
+        return False
+    return True
+
+
 def get_catalogs_for(brain_or_object, default="portal_catalog"):
     """Get all registered catalogs for the given portal_type, catalog brain or
     content object
@@ -727,6 +848,24 @@ def get_catalogs_for(brain_or_object, default="portal_catalog"):
     return catalogs
 
 
+def get_transitions_for(brain_or_object):
+    """List available workflow transitions for all workflows
+
+    :param brain_or_object: A single catalog brain or content object
+    :type brain_or_object: ATContentType/DexterityContentType/CatalogBrain
+    :returns: All possible available and allowed transitions
+    :rtype: list[dict]
+    """
+    workflow = get_tool('portal_workflow')
+    transitions = []
+    instance = get_object(brain_or_object)
+    for wfid in get_workflows_for(brain_or_object):
+        wf = workflow[wfid]
+        tlist = wf.getTransitionsFor(instance)
+        transitions.extend([t for t in tlist if t not in transitions])
+    return transitions
+
+
 def do_transition_for(brain_or_object, transition):
     """Performs a workflow transition for the passed in object.
 
@@ -739,33 +878,6 @@ def do_transition_for(brain_or_object, transition):
     obj = get_object(brain_or_object)
     ploneapi.content.transition(obj, transition)
     return obj
-
-
-def is_active(brain_or_object):
-    """Check if the workflow state of the object is 'inactive' or 'cancelled'.
-
-    :param brain_or_object: A single catalog brain or content object
-    :type brain_or_object: ATContentType/DexterityContentType/CatalogBrain
-    :returns: False if the object is in the state 'inactive' or 'cancelled'
-    :rtype: bool
-    """
-    if is_brain(brain_or_object):
-        if base_hasattr(brain_or_object, 'inactive_state') and \
-           brain_or_object.inactive_state == 'inactive':
-            return False
-        if base_hasattr(brain_or_object, 'cancellation_state') and \
-           brain_or_object.cancellation_state == 'cancelled':
-            return False
-    obj = get_object(brain_or_object)
-    wf = get_tool('portal_workflow')
-    workflows = get_workflows_for(obj)
-    if 'bika_inactive_workflow' in workflows \
-            and wf.getInfoFor(obj, 'inactive_state') == 'inactive':
-        return False
-    if 'bika_cancellation_workflow' in workflows \
-            and wf.getInfoFor(obj, 'cancellation_state') == 'cancelled':
-        return False
-    return True
 
 
 def get_roles_for_permission(permission, brain_or_object):
@@ -904,6 +1016,68 @@ def get_current_user():
     return ploneapi.user.get_current()
 
 
+def get_user_contact(user, contact_types=['Contact', 'LabContact']):
+    """Returns the associated contact of a Plone user
+
+    If the user passed in has no contact associated, return None.
+    The `contact_types` parameter filter the portal types for the search.
+
+    :param: Plone user
+    :contact_types: List with the contact portal types to search
+    :returns: Contact associated to the Plone user or None
+    """
+    if not user:
+        return None
+
+    query = {'portal_type': contact_types, 'getUsername': user.id}
+    brains = search(query, catalog='portal_catalog')
+    if not brains:
+        return None
+
+    if len(brains) > 1:
+        # Oops, the user has multiple contacts assigned, return None
+        contacts = map(lambda c: c.Title, brains)
+        err_msg = "User '{}' is bound to multiple Contacts '{}'"
+        err_msg = err_msg.format(user.id, ','.join(contacts))
+        logger.error(err_msg)
+        return None
+
+    return get_object(brains[0])
+
+
+def get_cache_key(brain_or_object):
+    """Generate a cache key for a common brain or object
+
+    :param brain_or_object: A single catalog brain or content object
+    :type brain_or_object: ATContentType/DexterityContentType/CatalogBrain
+    :returns: Cache Key
+    :rtype: str
+    """
+    key = [
+        get_portal_type(brain_or_object),
+        get_id(brain_or_object),
+        get_uid(brain_or_object),
+        # handle different domains gracefully
+        get_url(brain_or_object),
+        # Return the microsecond since the epoch in GMT
+        get_modification_date(brain_or_object).micros(),
+    ]
+    return "-".join(map(lambda x: str(x), key))
+
+
+def bika_cache_key_decorator(method, self, brain_or_object):
+    """Bika cache key decorator usable for
+
+    :param brain_or_object: A single catalog brain or content object
+    :type brain_or_object: ATContentType/DexterityContentType/CatalogBrain
+    :returns: Cache Key
+    :rtype: str
+    """
+    if brain_or_object is None:
+        raise DontCache
+    return get_cache_key(brain_or_object)
+
+
 def get_registry_record(name, default=None):
     """Returns the value of a registry record
 
@@ -914,3 +1088,124 @@ def get_registry_record(name, default=None):
     :returns: value of the registry record
     """
     return ploneapi.portal.get_registry_record(name, default=default)
+
+
+def normalize_id(string):
+    """Normalize the id
+
+    :param string: A string to normalize
+    :type string: str
+    :returns: Normalized ID
+    :rtype: str
+    """
+    if not isinstance(string, basestring):
+        fail("Type of argument must be string, found '{}'".format(type(string)))
+    # get the id nomalizer utility
+    normalizer = getUtility(IIDNormalizer).normalize
+    return normalizer(string)
+
+
+def normalize_filename(string):
+    """Normalize the filename
+
+    :param string: A string to normalize
+    :type string: str
+    :returns: Normalized ID
+    :rtype: str
+    """
+    if not isinstance(string, basestring):
+        fail("Type of argument must be string, found '{}'".format(type(string)))
+    # get the file nomalizer utility
+    normalizer = getUtility(IFileNameNormalizer).normalize
+    return normalizer(string)
+
+
+def is_uid(uid, validate=False):
+    """Checks if the passed in uid is a valid UID
+
+    :param uid: The uid to check
+    :param validate: If False, checks if uid is a valid 23 alphanumeric uid. If
+    True, also verifies if a brain exists for the uid passed in
+    :type uid: string
+    :return: True if a valid uid
+    :rtype: bool
+    """
+    if not isinstance(uid, basestring):
+        return False
+    if len(uid) != 32:
+        return False
+    if not UID_RX.match(uid):
+        return False
+    if not validate:
+        return True
+
+    # Check if a brain for this uid exists
+    uc = get_tool('uid_catalog')
+    brains = uc(UID=uid)
+    if brains:
+        assert (len(brains) == 1)
+    return len(brains) > 0
+
+
+def is_date(date):
+    """Checks if the passed in value is a valid Zope's DateTime
+
+    :param date: The date to check
+    :type date: DateTime
+    :return: True if a valid date
+    :rtype: bool
+    """
+    if not date:
+        return False
+    return isinstance(date, (DateTime, datetime))
+
+
+def to_date(value, default=None):
+    """Tries to convert the passed in value to Zope's DateTime
+
+    :param value: The value to be converted to a valid DateTime
+    :type value: str, DateTime or datetime
+    :return: The DateTime representation of the value passed in or default
+    """
+    if isinstance(value, DateTime):
+        return value
+    if not value:
+        if default is None:
+            return None
+        return to_date(default)
+    try:
+        if isinstance(value, str) and '.' in value:
+            # https://docs.plone.org/develop/plone/misc/datetime.html#datetime-problems-and-pitfalls
+            return DateTime(value, datefmt='international')
+        return DateTime(value)
+    except:
+        return to_date(default)
+
+
+def is_floatable(value):
+    """Checks if the passed in value is a valid floatable number
+
+    :param value: The value to be evaluated as a float number
+    :type value: str, float, int
+    :returns: True if is a valid float number
+    :rtype: bool"""
+    try:
+        float(value)
+        return True
+    except (TypeError, ValueError):
+        return False
+
+
+def to_float(value, default=_marker):
+    """Converts the passed in value to a float number
+
+    :param value: The value to be converted to a floatable number
+    :type value: str, float, int
+    :returns: The float number representation of the passed in value
+    :rtype: float
+    """
+    if not is_floatable(value):
+        if default is not _marker:
+            return to_float(default)
+        fail("Value %s is not floatable" % repr(value))
+    return float(value)
