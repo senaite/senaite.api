@@ -9,8 +9,14 @@ with open("docs/About.rst", "r") as fh:
 
 with open("src/senaite/api/docs/API.rst", "r") as fh:
     long_description += "\n\n"
-    long_description += "Usage\n"
-    long_description += "=====\n"
+    long_description += "Core API\n"
+    long_description += "========\n"
+    long_description += fh.read()
+
+with open("src/senaite/api/docs/API_analysis.rst", "r") as fh:
+    long_description += "\n\n"
+    long_description += "Analysis API\n"
+    long_description += "============\n"
     long_description += fh.read()
 
 with open("docs/Changelog.rst", "r") as fh:

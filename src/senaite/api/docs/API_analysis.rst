@@ -12,7 +12,7 @@ Running this test from the buildout directory::
 Test Setup
 ----------
 
-Needed Imports:
+Needed Imports::
 
     >>> import re
     >>> from AccessControl.PermissionRole import rolesForPermissionOn
@@ -32,20 +32,20 @@ Needed Imports:
     >>> from plone.app.testing import TEST_USER_PASSWORD
     >>> from plone.app.testing import setRoles
 
-Functional Helpers:
+Functional Helpers::
 
     >>> def start_server():
     ...     from Testing.ZopeTestCase.utils import startZServer
     ...     ip, port = startZServer()
     ...     return "http://{}:{}/{}".format(ip, port, portal.id)
 
-Variables:
+Variables::
 
     >>> portal = self.portal
     >>> request = self.request
     >>> bikasetup = portal.bika_setup
 
-We need to create some basic objects for the test:
+We need to create some basic objects for the test::
 
     >>> setRoles(portal, TEST_USER_ID, ['LabManager',])
     >>> date_now = DateTime().strftime("%Y-%m-%d")
@@ -63,7 +63,7 @@ We need to create some basic objects for the test:
     >>> Mg = api.create(bikasetup.bika_analysisservices, "AnalysisService", title="Magnesium", Keyword="Mg", Price="20", Category=category.UID(), DuplicateVariation="0.5")
     >>> service_uids = [api.get_uid(an) for an in [Cu, Fe, Au, Mg]]
 
-Create an Analysis Specification for `Water`:
+Create an Analysis Specification for `Water`::
 
     >>> sampletype_uid = api.get_uid(sampletype)
     >>> rr1 = {"keyword": "Au", "min": "-5", "max":  "5", "warn_min": "-5.5", "warn_max": "5.5"}
@@ -74,13 +74,13 @@ Create an Analysis Specification for `Water`:
     >>> specification = api.create(bikasetup.bika_analysisspecs, "AnalysisSpec", title="Lab Water Spec", SampleType=sampletype_uid, ResultsRange=rr)
     >>> spec_uid = api.get_uid(specification)
 
-Create a Reference Definition for blank:
+Create a Reference Definition for blank::
 
     >>> blankdef = api.create(bikasetup.bika_referencedefinitions, "ReferenceDefinition", title="Blank definition", Blank=True)
     >>> blank_refs = [{'uid': Au.UID(), 'result': '0', 'min': '0', 'max': '0'},]
     >>> blankdef.setReferenceResults(blank_refs)
 
-And for control:
+And for control::
 
     >>> controldef = api.create(bikasetup.bika_referencedefinitions, "ReferenceDefinition", title="Control definition")
     >>> control_refs = [{'uid': Au.UID(), 'result': '10', 'min': '9.99', 'max': '10.01'},
@@ -96,7 +96,7 @@ And for control:
     ...                      Blank=False, ExpiryDate=date_future,
     ...                      ReferenceResults=control_refs)
 
-Create an Analysis Request:
+Create an Analysis Request::
 
     >>> values = {
     ...     'Client': api.get_uid(client),
@@ -110,20 +110,20 @@ Create an Analysis Request:
     >>> ar = create_analysisrequest(client, request, values, service_uids)
     >>> success = doActionFor(ar, 'receive')
 
-Create a new Worksheet and add the analyses:
+Create a new Worksheet and add the analyses::
 
     >>> worksheet = api.create(portal.worksheets, "Worksheet")
     >>> analyses = map(api.get_object, ar.getAnalyses())
     >>> for analysis in analyses:
     ...     worksheet.addAnalysis(analysis)
 
-Add a duplicate for `Cu`:
+Add a duplicate for `Cu`::
 
     >>> position = worksheet.get_slot_position(ar, 'a')
     >>> duplicates = worksheet.addDuplicateAnalyses(position)
     >>> duplicates.sort(key=lambda analysis: analysis.getKeyword(), reverse=False)
 
-Add a blank and a control:
+Add a blank and a control::
 
     >>> blanks = worksheet.addReferenceAnalyses(blank, service_uids)
     >>> blanks.sort(key=lambda analysis: analysis.getKeyword(), reverse=False)
@@ -134,12 +134,12 @@ Add a blank and a control:
 Check if results are out of range
 ---------------------------------
 
-First, get the analyses from slot 1 and sort them asc:
+First, get the analyses from slot 1 and sort them asc::
 
     >>> analyses = worksheet.get_analyses_at(1)
     >>> analyses.sort(key=lambda analysis: analysis.getKeyword(), reverse=False)
 
-Set results for analysis `Au` (min: -5, max: 5, warn_min: -5.5, warn_max: 5.5):
+Set results for analysis `Au` (min: -5, max: 5, warn_min: -5.5, warn_max: 5.5)::
 
     >>> au_analysis = analyses[0]
     >>> au_analysis.setResult(2)
@@ -166,7 +166,7 @@ Set results for analysis `Au` (min: -5, max: 5, warn_min: -5.5, warn_max: 5.5):
     >>> is_out_of_range(au_analysis)
     (True, True)
 
-Results in shoulders?:
+Results in shoulders?::
 
     >>> au_analysis.setResult(-5.2)
     >>> is_out_of_range(au_analysis)
@@ -196,14 +196,14 @@ Results in shoulders?:
 Check if results for duplicates are out of range
 ------------------------------------------------
 
-Get the first duplicate analysis that comes from `Au`:
+Get the first duplicate analysis that comes from `Au`::
 
     >>> duplicate = duplicates[0]
 
 A Duplicate will be considered out of range if its result does not match with
 the result set to the analysis that was duplicated from, with the Duplicate
 Variation in % as the margin error. The Duplicate Variation assigned in the
-Analysis Service `Au` is 0.5%:
+Analysis Service `Au` is 0.5%::
 
     >>> dup_variation = au_analysis.getDuplicateVariation()
     >>> dup_variation = api.to_float(dup_variation)
@@ -212,7 +212,7 @@ Analysis Service `Au` is 0.5%:
 
 Set an in-range result (between -5 and 5) for routine analysis and check all
 variants on it's duplicate. Given that the duplicate variation is 0.5, the
-valid range for the duplicate must be `Au +-0.5%`:
+valid range for the duplicate must be `Au +-0.5%`::
 
     >>> result = 2.0
     >>> au_analysis.setResult(result)
@@ -243,7 +243,7 @@ valid range for the duplicate must be `Au +-0.5%`:
 
 Set an out-of-range result, but within shoulders, for routine analysis and check
 all variants on it's duplicate. Given that the duplicate variation is 0.5, the
-valid range for the duplicate must be `Au +-0.5%`:
+valid range for the duplicate must be `Au +-0.5%`::
 
     >>> result = 5.5
     >>> au_analysis.setResult(result)
@@ -274,7 +274,7 @@ valid range for the duplicate must be `Au +-0.5%`:
 
 Set an out-of-range and out-of-shoulders result, for routine analysis and check
 all variants on it's duplicate. Given that the duplicate variation is 0.5, the
-valid range for the duplicate must be `Au +-0.5%`:
+valid range for the duplicate must be `Au +-0.5%`::
 
     >>> result = -7.0
     >>> au_analysis.setResult(result)
@@ -318,14 +318,14 @@ shoulders are built based on % error.
 Blank Analyses
 ..............
 
-The first blank analysis corresponds to `Au`:
+The first blank analysis corresponds to `Au`::
 
     >>> au_blank = blanks[0]
 
 For `Au` blank, as per the reference definition used above, the expected result
 is 0 +/- 0.1%. Since the expected result is 0, no shoulders will be considered
 regardless of the % of error. Thus, result will always be "out-of-shoulders"
-when out of range.
+when out of range::
 
     >>> au_blank.setResult(0.0)
     >>> is_out_of_range(au_blank)
@@ -354,14 +354,14 @@ when out of range.
 Control Analyses
 ................
 
-The first control analysis corresponds to `Au`:
+The first control analysis corresponds to `Au`::
 
     >>> au_control = controls[0]
 
 For `Au` control, as per the reference definition used above, the expected
 result is 10 +/- 0.1% = 10 +/- 0.01
 
-First, check for in-range values:
+First, check for in-range values::
 
     >>> au_control.setResult(10)
     >>> is_out_of_range(au_control)
@@ -411,7 +411,7 @@ First, check for in-range values:
     >>> is_out_of_range(au_control)
     (False, False)
 
-Now, check for out-of-range results:
+Now, check for out-of-range results::
 
     >>> au_control.setResult(9.98)
     >>> is_out_of_range(au_control)
@@ -429,7 +429,7 @@ Now, check for out-of-range results:
     >>> is_out_of_range(au_control)
     (True, True)
 
-And do the same with the control for `Cu` that expects -0.9 +/- 20%:
+And do the same with the control for `Cu` that expects -0.9 +/- 20%::
 
     >>> cu_control = controls[1]
 
@@ -475,7 +475,7 @@ First, check for in-range values:
     >>> is_out_of_range(cu_control)
     (False, False)
 
-Now, check for out-of-range results:
+Now, check for out-of-range results::
 
     >>> cu_control.setResult(0)
     >>> is_out_of_range(cu_control)
