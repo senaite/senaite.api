@@ -26,8 +26,11 @@ creation, lookup by ID/UID, search etc.
 
 Please see the doctests for further details and usage:
 
-- [Core API](https://github.com/senaite/senaite.api/blob/master/src/senaite/api/docs/API.rst)
-- [Analysis API](https://github.com/senaite/senaite.api/blob/master/src/senaite/api/docs/API_analysis.rst)
+-  `Core API`_
+-  `Analysis API`_
+
+.. _Core API: https://github.com/senaite/senaite.api/blob/master/src/senaite/api/docs/API.rst
+.. _Analysis API: https://github.com/senaite/senaite.api/blob/master/src/senaite/api/docs/API_analysis.rst
 
 
 Installation
