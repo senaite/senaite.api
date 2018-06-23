@@ -433,7 +433,7 @@ And do the same with the control for `Cu` that expects -0.9 +/- 20%::
 
     >>> cu_control = controls[1]
 
-First, check for in-range values:
+First, check for in-range values::
 
     >>> cu_control.setResult(-0.9)
     >>> is_out_of_range(cu_control)

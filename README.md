@@ -1,11 +1,11 @@
 <div align="center">
 
   <a href="https://github.com/senaite/senaite.api">
-    <img src="static/logo.png" alt="senaite.api" height="64" />
+    <img src="static/api-logo.png" alt="senaite.api" height="64" />
   </a>
   <h1>SENAITE API</h1>
 
-  <p>The API provides a unified interface to the SENAITE CORE for developers.</p>
+  <p>The API provides a unified interface SENAITE Core and Add-on developers</p>
 
   <div>
     <a href="https://pypi.python.org/pypi/senaite.api">
@@ -26,9 +26,10 @@
   </div>
 </div>
 
+
 ## About
 
-SENAITE API is the Swiss-Army-Knife for SENAITE Core Add-on developers. It
+SENAITE API is the Swiss-Army-Knife for SENAITE Core and Add-on developers. It
 provides a sane interface for common tasks in SENAITE, like e.g. object
 creation, lookup by ID/UID, search etc.
 
